@@ -15,6 +15,9 @@ export const ActivityContext = createContext<activityContextProps>(null!);
 
 export default function ActivityProvider({ children }: ActivityProviderProps) {
     const [state, dispatch] = useReducer(activityReducer, initialState);
+
+    useMemo(() => localStorage.setItem("activities", JSON.stringify(state.activities)), [state.activities]);
+
     const caloriesConsumed = useMemo(
         () =>
             state.activities.reduce(
@@ -32,6 +35,7 @@ export default function ActivityProvider({ children }: ActivityProviderProps) {
             ),
         [state.activities]
     );
+
     return (
         <ActivityContext.Provider value={{ state, dispatch, caloriesConsumed, caloriesBurned }}>
             {children}

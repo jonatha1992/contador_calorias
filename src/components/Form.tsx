@@ -1,7 +1,7 @@
 import { categories } from "../data/categories";
 import useActivity from "../hooks/useActivity";
 import { Activity } from "../types";
-import { ChangeEvent, useState, FormEvent } from "react";
+import { ChangeEvent, useState, FormEvent, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const initialState: Activity = {
@@ -12,8 +12,15 @@ const initialState: Activity = {
 };
 
 export default function Form() {
-    const { dispatch } = useActivity();
+    const { state, dispatch } = useActivity();
     const [activity, setActivity] = useState<Activity>(initialState);
+
+    useEffect(() => {
+        if (state.activeId) {
+            const activeActivity = state.activities.find((activity) => activity.id === state.activeId);
+            setActivity(activeActivity!);
+        }
+    }, [state.activeId]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
         const isNumberField = ["category", "calories"].includes(event.target.id);
