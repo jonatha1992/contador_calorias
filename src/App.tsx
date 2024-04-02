@@ -1,6 +1,6 @@
+import ActivityList from "./components/ActivityList";
 import CalorieTracker from "./components/CalorieTracker";
 import Form from "./components/Form";
-import useActivity from "./hooks/useActivity";
 
 function App() {
     return (
@@ -19,6 +19,11 @@ function App() {
             <section className=" bg-black py-5  px-5 ">
                 <div className="max-w-4xl mx-auto">
                     <CalorieTracker />
+                </div>
+            </section>
+            <section className=" bg-white py-5  px-5 ">
+                <div className="max-w-4xl mx-auto">
+                    <ActivityList />
                 </div>
             </section>
         </>

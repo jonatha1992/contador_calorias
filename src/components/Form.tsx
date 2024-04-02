@@ -1,13 +1,19 @@
 import { categories } from "../data/categories";
+import useActivity from "../hooks/useActivity";
 import { Activity } from "../types";
 import { ChangeEvent, useState, FormEvent } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+const initialState: Activity = {
+    id: uuidv4(),
+    category: 1,
+    name: "",
+    calories: 0,
+};
+
 export default function Form() {
-    const [activity, setActivity] = useState<Activity>({
-        id: "",
-        category: 1,
-        name: "",
-        calories: 0,
-    });
+    const { dispatch } = useActivity();
+    const [activity, setActivity] = useState<Activity>(initialState);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
         const isNumberField = ["category", "calories"].includes(event.target.id);
@@ -19,9 +25,11 @@ export default function Form() {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (isValid()) {
-            console.log(activity);
-        }
+        dispatch({ type: "save-activity", payload: { newActivity: activity } });
+        setActivity({
+            ...initialState,
+            id: uuidv4(),
+        });
     };
 
     const isValid = () => {
@@ -50,11 +58,11 @@ export default function Form() {
                 </select>
             </div>
             <div className="grid grid-cols-1 gap-3">
-                <label className="font-bold" htmlFor="activity">
+                <label className="font-bold" htmlFor="name">
                     Actividad
                 </label>
                 <input
-                    id="activity"
+                    id="name"
                     type="text"
                     placeholder="ej. Comidad, Juego de naranja , Ejercicio..."
                     className="border border-slate-300 w-full p-3 rounded-lg"
