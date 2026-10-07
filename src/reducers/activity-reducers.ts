@@ -12,8 +12,15 @@ export type ActivityState = {
 };
 
 const localStorageActivities = (): Activity[] => {
-    const activities = localStorage.getItem("activities");
-    return activities ? JSON.parse(activities) : [];
+    try {
+        const activities = localStorage.getItem("activities");
+        if (!activities) return [];
+        const parsed = JSON.parse(activities);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (err) {
+        console.error("Error al leer activities de localStorage:", err);
+        return [];
+    }
 };
 
 export const initialState: ActivityState = {
@@ -49,6 +56,7 @@ export const activityReducer = (state: ActivityState = initialState, action: Act
         return {
             ...state,
             activities: state.activities.filter((activity) => activity.id !== action.payload.id),
+            activeId: state.activeId === action.payload.id ? "" : state.activeId,
         };
     }
 

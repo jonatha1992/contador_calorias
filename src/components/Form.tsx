@@ -17,10 +17,16 @@ export default function Form() {
 
     useEffect(() => {
         if (state.activeId) {
-            const activeActivity = state.activities.find((activity) => activity.id === state.activeId);
-            setActivity(activeActivity!);
+            const activeActivity = state.activities.find((act) => act.id === state.activeId);
+            if (activeActivity) {
+                setActivity(activeActivity);
+            } else {
+                setActivity({ ...initialState, id: uuidv4() });
+            }
+        } else {
+            setActivity({ ...initialState, id: uuidv4() });
         }
-    }, [state.activeId]);
+    }, [state.activeId, state.activities]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
         const isNumberField = ["category", "calories"].includes(event.target.id);

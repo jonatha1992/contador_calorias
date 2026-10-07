@@ -1,4 +1,4 @@
-import { createContext, useReducer, Dispatch, ReactNode, useMemo } from "react";
+import { createContext, useReducer, Dispatch, ReactNode, useMemo, useEffect } from "react";
 import { ActivityState, ActivityActions, activityReducer, initialState } from "../reducers/activity-reducers";
 
 type ActivityProviderProps = {
@@ -16,7 +16,13 @@ export const ActivityContext = createContext<activityContextProps>(null!);
 export default function ActivityProvider({ children }: ActivityProviderProps) {
     const [state, dispatch] = useReducer(activityReducer, initialState);
 
-    useMemo(() => localStorage.setItem("activities", JSON.stringify(state.activities)), [state.activities]);
+    useEffect(() => {
+        try {
+            localStorage.setItem("activities", JSON.stringify(state.activities));
+        } catch (err) {
+            console.error("Error al persistir activities en localStorage:", err);
+        }
+    }, [state.activities]);
 
     const caloriesConsumed = useMemo(
         () =>
